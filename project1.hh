@@ -13,6 +13,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+using namespace std;
 
 // Convenient typedef for a vector of strings.
 typedef std::vector<std::string> string_vector;
@@ -21,8 +22,22 @@ typedef std::vector<std::string> string_vector;
 // cleared, and then each word from the file is added to the
 // vector. Returns true on success or fale on I/O error.
 bool load_words(string_vector& words, const std::string& path) {
-  // TODO: implement this function, then delete this comment
-  return false;
+	fstream inFile("../" + path);
+	string line;
+	vector <string> wordsArray;
+	inFile.open("words.txt");
+	if (!inFile)
+	{
+		return false;
+	}
+	while (!inFile.eof())
+	{
+		getline(inFile, line);
+		words.push_back(line);
+	}
+	words.pop_back();
+	inFile.close();
+	return true;
 }
 
 // Return true if string2 is a mirrored copy of string1, or false
@@ -34,7 +49,9 @@ bool load_words(string_vector& words, const std::string& path) {
 // and string2 and never creates another string object.
 bool is_mirrored(const std::string& string1, const std::string& string2) {
   // TODO: implement this function, then delete this comment
-  return false;
+  
+	
+return false;
 }
 
 // Return true if alleged_substring can be found as a substring of
