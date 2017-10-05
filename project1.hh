@@ -22,21 +22,25 @@ typedef std::vector<std::string> string_vector;
 // cleared, and then each word from the file is added to the
 // vector. Returns true on success or fale on I/O error.
 bool load_words(string_vector& words, const std::string& path) {
-	fstream inFile("../" + path);
-	string line;
-	vector <string> wordsArray;
-	inFile.open("words.txt");
-	if (!inFile)
+	ifstream inFile("../" + path);
+	string line; //This is the string that is used for reading input from the file to the vector
+	words.clear(); //Cleared the words vector before pushing 
+	if (!inFile) //checks if the file was loaded correctly or not
 	{
 		return false;
 	}
-	while (!inFile.eof())
+	else
 	{
-		getline(inFile, line);
-		words.push_back(line);
+		//traverses the file loading all of the words in it into the words vector
+		while(inFile)
+			{
+				getline(inFile, line);
+				words.push_back(line);
+			}
+			words.pop_back();
+			inFile.close();
 	}
-	words.pop_back();
-	inFile.close();
+	
 	return true;
 }
 
@@ -49,9 +53,37 @@ bool load_words(string_vector& words, const std::string& path) {
 // and string2 and never creates another string object.
 bool is_mirrored(const std::string& string1, const std::string& string2) {
   // TODO: implement this function, then delete this comment
-  
-	
-return false;
+	int length1 = string1.size()-1; //length of string 1
+	int length2 = string2.size()-1; //length of string 2
+	if (length1 != length2) //if they aren't equal in length then no mirror
+	{
+		return false;
+	}
+	else if (string1 == string2) //if they are the same string then no mirror
+	{
+		return false;
+	}
+	else //else check if they are mirrors of eachother by checking if both ends of the 
+		//strings are equal by decrementing from the end of one, and incrementing from the 
+		//beggining of the other 
+	{
+
+		int i = 0;
+		int j = length1;
+		
+		while (i <= length1)
+		{
+
+			if (string1[i] != string2[j])
+			{
+				return false;
+			}
+			i++;
+			j--;
+		}
+	}
+		//return true that they are mirrors
+		return true;
 }
 
 // Return true if alleged_substring can be found as a substring of
@@ -62,7 +94,60 @@ return false;
 bool is_substring(const std::string& alleged_substring,
 		  const std::string& alleged_superstring) {
   // TODO: implement this function, then delete this comment
-  return false;
+	int length = alleged_superstring.size() - 1;
+	int length2 = alleged_substring.size() - 1;
+	int i = 0;
+	bool testing = false;
+	int k = 0;
+
+	if (alleged_substring == "" && alleged_superstring == "")
+	{
+		return true;
+	}
+	else if (alleged_substring == "" && alleged_superstring != "")
+	{
+		return true;
+	}
+	else if (alleged_superstring == "" && alleged_substring != "")
+	{
+		return false;
+	}
+	else
+	{
+			while (i <= length)
+			{
+				if (alleged_superstring[i] == alleged_substring[0])
+				{
+					if (alleged_superstring.substr(i,length-i).size() >= length2)
+					{
+						k = 0;//to resest the k value so sequences of substrings can be rechecked
+						for (int j = 0; j <= length2; j++)
+						{
+
+							if (alleged_superstring[i + k] == alleged_substring[j])
+							{
+								testing = true;
+							}
+							else
+							{
+								testing = false;
+							}
+							k++;
+						}
+					}
+				}
+				i++;
+			}
+	}
+
+	if (testing)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 // Return the character that occurs the most times in the given vector
@@ -73,7 +158,34 @@ bool is_substring(const std::string& alleged_substring,
 // conventional alphabetical order).
 char character_mode(const string_vector& strings) {
   // TODO: implement this function, then delete this comment
-  return 0;
+	int charArray[256] = { 0 };
+	int length = strings.size() - 1;
+	string temp;
+	int tempLength = 0;
+	int count = 0;
+	char character;
+	int index_biggest = 0;
+	for (int i = 0; i <= length; i++)
+	{
+		temp = strings[i];
+		tempLength = strings[i].size() - 1;
+		while (count <= tempLength)
+		{
+			character = temp[count];
+			charArray[int(character)]++;
+			count++;
+		}
+		count = 0;//for counting other words. duh.
+	}
+	for (int i = 0; i < 256; i++)
+	{
+		if (charArray[index_biggest] < charArray[i])
+		{
+			index_biggest = i;
+		}
+	}
+
+  return char(index_biggest);
 }
 
 // Return a longest string in the strings vector whose mirror is also
@@ -85,7 +197,46 @@ char character_mode(const string_vector& strings) {
 // returns an empty string.
 std::string longest_mirrored_string(const string_vector& strings) {
   // TODO: implement this function, then delete this comment
-  return "";
+
+	vector <string> mirrorArray;
+
+	int length = strings.size() - 1;
+	
+	for (int i = 0; i < length; i++)
+	{
+		for (int j = i + 1; j <= length; j++)
+		{
+			if (is_mirrored(strings[i], strings[j]))
+			{		
+			
+					mirrorArray.push_back(strings[i]);
+			}
+		}
+		
+	}
+	int longestIndex = 0;
+	int length2 = mirrorArray.size();
+	//cout << "length2: " << length2 << endl;
+
+	for (int i = 0; i < length2; i++)
+	{
+		if (mirrorArray[longestIndex].size() < mirrorArray[i].size())
+		{
+			longestIndex = i;
+		}
+	}
+
+
+	if (length2 == 0)
+	{
+		return "";
+	}
+	else
+	{
+		return mirrorArray[longestIndex];
+	}
+
+	return "";
 }
 
 // Return a vector of length exactly three, containing the longest
