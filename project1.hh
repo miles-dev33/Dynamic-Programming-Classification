@@ -24,14 +24,17 @@ typedef std::vector<std::string> string_vector;
 // cleared, and then each word from the file is added to the
 // vector. Returns true on success or fale on I/O error.
 bool load_words(string_vector& words, const std::string& path) {
+	//Open the file and direct to its proper path
 	ifstream inFile("../" + path);
-	string line;			//vector read buffer
+	//vector read buffer
+	string line;			
 	words.clear();
 	if (!inFile.is_open())
 		return false;
 	else
 	{
-		while (inFile)		//file traversal & load loop
+		//file traversal & load loop
+		while (inFile)		
 		{
 			getline(inFile, line);
 			words.push_back(line);
@@ -52,22 +55,27 @@ bool load_words(string_vector& words, const std::string& path) {
 bool is_mirrored(const std::string& string1, const std::string& string2) {
 	int length1 = string1.size();
 	int length2 = string2.size();
-	if (length1 != length2)			//non-mirror case
+	//non-mirror case
+	if (length1 != length2)			
 		return false;
-	else if (string1 == string2)	//same string case
+	//same string case
+	else if (string1 == string2)	
 		return false;
-	else							//possible mirror case 
+	//possible mirror case 
+	else							
 	{
 		int i = 0;
 		int j = length1 - 1;
 
 		while (i < length1)
 		{
-			if (string1[i] != string2[j])	//increment from one side and decrement from the other to match
+			//increment from one side and decrement from the other to match
+			if (string1[i] != string2[j])	
 				return false;
 			i++;
 			j--;
 		}
+		//It returns true if it is a mirror
 		return true;
 	}
 }
@@ -80,8 +88,10 @@ bool is_mirrored(const std::string& string1, const std::string& string2) {
 bool is_substring(const std::string& alleged_substring, const std::string& alleged_superstring) {
 	int super_len = alleged_superstring.size();
 	int sub_len = alleged_substring.size();
-	bool substring_exists = false;	//return value control variable
-	int k = 0;						//superstring character counter
+	//return value control variable
+	bool substring_exists = false;	
+	//superstring character counter
+	int k = 0;						
 
 	if (alleged_substring == "" && alleged_superstring == "")
 		return true;
@@ -93,14 +103,18 @@ bool is_substring(const std::string& alleged_substring, const std::string& alleg
 	{
 		for (int i = 0; i < super_len; i++)
 		{
-			if (alleged_superstring[i] == alleged_substring[0])						//when the first letter of of substring matches in the superstring
+			//when the first letter of of substring matches in the superstring
+			if (alleged_superstring[i] == alleged_substring[0])						
 			{
-				if (alleged_superstring.substr(i, super_len - i).size() >= sub_len)	//making sure that the length of the superstring is greater than or equal to the length of the substring
+				//making sure that the length of the superstring is greater than or equal to the length of the substring
+				if (alleged_superstring.substr(i, super_len - i).size() >= sub_len)	
 				{
-					k = 0;															//reset counter for subsequent loop iterations
+					//reset counter for subsequent loop iterations
+					k = 0;															
 					for (int j = 0; j < sub_len; j++)
 					{
-						if (alleged_superstring[i + k] == alleged_substring[j])		//check from first match to end of substring length
+						//check from first match to end of substring length
+						if (alleged_superstring[i + k] == alleged_substring[j])	
 							substring_exists = true;
 						else
 							substring_exists = false;
@@ -110,7 +124,7 @@ bool is_substring(const std::string& alleged_substring, const std::string& alleg
 			}
 		}
 	}
-
+	//if the substring exists return true, if not return false
 	if (substring_exists)
 		return true;
 	else
@@ -130,23 +144,27 @@ char character_mode(const string_vector& strings) {
 	int num_words = strings.size();
 	int num_chars = 0;
 	int index_biggest = 0;
-	for (int i = 0; i < num_words; i++)				//loop through every word in the input vector
+	//loop through every word in the input vector
+	for (int i = 0; i < num_words; i++)				
 	{
 		word = strings[i];
 		num_chars = strings[i].size();
-		for (int j = 0; j < num_chars; j++)			//loop through every character for every word
+		//loop through every character for every word
+		for (int j = 0; j < num_chars; j++)			
 		{
 			character = word[j];
-			charArray[int(character)]++;			//increment in charArray by ASCII value
+			//increment in charArray by ASCII value
+			charArray[int(character)]++;			
 		}
 	}
-	for (int i = 0; i < 256; i++)					//finding the character that occurs the most times
+	//finding the character that occurs the most times
+	for (int i = 0; i < 256; i++)					
 	{
 		if (charArray[index_biggest] < charArray[i])
 			index_biggest = i;
 	}
-
-	return char(index_biggest);						//int to char conversion
+	//int to char conversion
+	return char(index_biggest);						
 }
 
 // Return a longest string in the strings vector whose mirror is also
@@ -163,19 +181,24 @@ std::string longest_mirrored_string(const string_vector& strings) {
 	int longest_index = 0;
 	for (int i = 0; i < vec_len; i++)
 	{
-		for (int j = i + 1; j < vec_len; j++)								//mirror comparison loops
+		//mirror comparison loops
+		for (int j = i + 1; j < vec_len; j++)				
 		{
+			//store mirror when found
 			if (is_mirrored(strings[i], strings[j]))
-				mirrorArray.push_back(strings[i]);							//store mirror when found
+				mirrorArray.push_back(strings[i]);						
 		}
 	}
 	mirror_len = mirrorArray.size();
-	for (int i = 0; i < mirror_len; i++)									//longest mirror search loop
+	//longest mirror search loop
+	for (int i = 0; i < mirror_len; i++)									
 	{
+		//store index of longest mirror
 		if (mirrorArray[longest_index].size() < mirrorArray[i].size())
-			longest_index = i;												//store index of longest mirror
+			longest_index = i;											
 	}
-	if (mirror_len == 0)													//when no mirrors are found
+	//when no mirrors are found return empty
+	if (mirror_len == 0)												
 		return "";
 	else
 		return mirrorArray[longest_index];
@@ -193,17 +216,21 @@ string_vector longest_substring_trio(const string_vector& strings) {
 	int vec_len = strings.size();
 	int longest_trio = 0;
 	int trio_length = 0;
+	//triply nested for loop for n^3 combinations of substrings
 	for (int i = 0; i < vec_len; i++)
 	{
 		for (int j = i + 1; j < vec_len; j++)
 		{
-			for (int k = j + 1; k < vec_len; k++)			//triply nested for loop for n^3 combinations of substrings
+			for (int k = j + 1; k < vec_len; k++)			
 			{
 				trio_length = strings[i].size() + strings[j].size() + strings[k].size();
+				//true when [i] is a subset of [j] is a subset of [k] OR [j] is a subset of [i] is a subset of [k]
+
 				if (((is_substring(strings[i], strings[j]) && is_substring(strings[j], strings[k])) ||
 					(is_substring(strings[j], strings[i]) && is_substring(strings[i], strings[k])) &&
-					longest_trio < trio_length))			//true when [i] is a subset of [j] is a subset of [k] OR [j] is a subset of [i] is a subset of [k]
-				{											//store trio when true for current loop iteration
+					longest_trio < trio_length))		
+				{		
+					//store trio when true for current loop iteration
 					trio[0] = strings[i];
 					trio[1] = strings[j];
 					trio[2] = strings[k];
@@ -212,5 +239,6 @@ string_vector longest_substring_trio(const string_vector& strings) {
 			}
 		}
 	}
+	//return the trio it is default as empty set, so if there isn't one it'll be empty
 	return trio;
 }
