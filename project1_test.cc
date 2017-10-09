@@ -143,11 +143,11 @@ int main() {
 		     sort(trio.begin(), trio.end());
 		     TEST_EQUAL("found: short trio", "age", trio[0]);
 		     TEST_EQUAL("found: short trio", "garage", trio[1]);
-		     TEST_EQUAL("found: short trio", "garakged", trio[2]);
+		     TEST_EQUAL("found: short trio", "garaged", trio[2]);
 		   });
 
 
   return rubric.run();
   
-
+  
 }

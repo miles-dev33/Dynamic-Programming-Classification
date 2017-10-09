@@ -7,6 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include "timer.hh"
+
 
 #include <algorithm>
 #include <cassert>
@@ -23,24 +25,24 @@ typedef std::vector<std::string> string_vector;
 // vector. Returns true on success or fale on I/O error.
 bool load_words(string_vector& words, const std::string& path) {
 	ifstream inFile("../" + path);
-	string line; //This is the string that is used for reading input from the file to the vector
+	string line;   //This is the string that is used for reading input from the file to the vector
 	words.clear(); //Cleared the words vector before pushing 
-	if (!inFile) //checks if the file was loaded correctly or not
+	if (!inFile)   //checks if the file was loaded correctly or not
 	{
 		return false;
 	}
 	else
 	{
 		//traverses the file loading all of the words in it into the words vector
-		while(inFile)
-			{
-				getline(inFile, line);
-				words.push_back(line);
-			}
-			words.pop_back();
-			inFile.close();
+		while (inFile)
+		{
+			getline(inFile, line);
+			words.push_back(line);
+		}
+		words.pop_back();
+		inFile.close();
 	}
-	
+
 	return true;
 }
 
@@ -52,9 +54,9 @@ bool load_words(string_vector& words, const std::string& path) {
 // function should be in-place, meaning that it only examines string1
 // and string2 and never creates another string object.
 bool is_mirrored(const std::string& string1, const std::string& string2) {
-  // TODO: implement this function, then delete this comment
-	int length1 = string1.size()-1; //length of string 1
-	int length2 = string2.size()-1; //length of string 2
+	// TODO: implement this function, then delete this comment
+	int length1 = string1.size() - 1; //length of string 1
+	int length2 = string2.size() - 1; //length of string 2
 	if (length1 != length2) //if they aren't equal in length then no mirror
 	{
 		return false;
@@ -64,13 +66,13 @@ bool is_mirrored(const std::string& string1, const std::string& string2) {
 		return false;
 	}
 	else //else check if they are mirrors of eachother by checking if both ends of the 
-		//strings are equal by decrementing from the end of one, and incrementing from the 
-		//beggining of the other 
+		 //strings are equal by decrementing from the end of one, and incrementing from the 
+		 //beggining of the other 
 	{
 
 		int i = 0;
 		int j = length1;
-		
+
 		while (i <= length1)
 		{
 
@@ -82,8 +84,8 @@ bool is_mirrored(const std::string& string1, const std::string& string2) {
 			j--;
 		}
 	}
-		//return true that they are mirrors
-		return true;
+	//return true that they are mirrors
+	return true;
 }
 
 // Return true if alleged_substring can be found as a substring of
@@ -92,8 +94,8 @@ bool is_mirrored(const std::string& string1, const std::string& string2) {
 // function should be in-place, meaning that it only examines string1
 // and string2 and never creates another string object.
 bool is_substring(const std::string& alleged_substring,
-		  const std::string& alleged_superstring) {
-  // TODO: implement this function, then delete this comment
+	const std::string& alleged_superstring) {
+	// TODO: implement this function, then delete this comment
 	int length = alleged_superstring.size() - 1;
 	int length2 = alleged_substring.size() - 1;
 	int i = 0;
@@ -114,30 +116,30 @@ bool is_substring(const std::string& alleged_substring,
 	}
 	else
 	{
-			while (i <= length)
+		for (int i = 0; i < length; i++)
+		{
+			if (alleged_superstring[i] == alleged_substring[0])
 			{
-				if (alleged_superstring[i] == alleged_substring[0])
+				//making sure that the length of the superstring is greater than the length of the substring
+				if (alleged_superstring.substr(i, length - i).size() >= length2)
 				{
-					if (alleged_superstring.substr(i,length-i).size() >= length2)
+					k = 0;//to resest the k value so sequences of substrings can be rechecked
+					for (int j = 0; j <= length2; j++)
 					{
-						k = 0;//to resest the k value so sequences of substrings can be rechecked
-						for (int j = 0; j <= length2; j++)
+						if (alleged_superstring[i + k] == alleged_substring[j])
 						{
-
-							if (alleged_superstring[i + k] == alleged_substring[j])
-							{
-								testing = true;
-							}
-							else
-							{
-								testing = false;
-							}
-							k++;
+							testing = true;
 						}
+						else
+						{
+							testing = false;
+						}
+						k++;
 					}
 				}
-				i++;
 			}
+
+		}
 	}
 
 	if (testing)
@@ -157,7 +159,7 @@ bool is_substring(const std::string& alleged_substring,
 // the lesser ASCII code (i.e. the tied character that comes first in
 // conventional alphabetical order).
 char character_mode(const string_vector& strings) {
-  // TODO: implement this function, then delete this comment
+	// TODO: implement this function, then delete this comment
 	int charArray[256] = { 0 };
 	int length = strings.size() - 1;
 	string temp;
@@ -185,7 +187,7 @@ char character_mode(const string_vector& strings) {
 		}
 	}
 
-  return char(index_biggest);
+	return char(index_biggest);
 }
 
 // Return a longest string in the strings vector whose mirror is also
@@ -196,23 +198,23 @@ char character_mode(const string_vector& strings) {
 // either "cat" or "tac". If the vector contains no mirrored strings,
 // returns an empty string.
 std::string longest_mirrored_string(const string_vector& strings) {
-  // TODO: implement this function, then delete this comment
+	// TODO: implement this function, then delete this comment
 
 	vector <string> mirrorArray;
 
 	int length = strings.size() - 1;
-	
+
 	for (int i = 0; i < length; i++)
 	{
 		for (int j = i + 1; j <= length; j++)
 		{
 			if (is_mirrored(strings[i], strings[j]))
-			{		
-			
-					mirrorArray.push_back(strings[i]);
+			{
+
+				mirrorArray.push_back(strings[i]);
 			}
 		}
-		
+
 	}
 	int longestIndex = 0;
 	int length2 = mirrorArray.size();
@@ -247,6 +249,39 @@ std::string longest_mirrored_string(const string_vector& strings) {
 // vector does not contain a substring trio, return a vector
 // containing exactly three empty strings.
 string_vector longest_substring_trio(const string_vector& strings) {
-  // TODO: implement this function, then delete this comment
-  return string_vector();
+	vector <string> subStringTrio = { "","","" };
+	int len = strings.size();
+	int best_length = 0;
+	int abc_length = 0;
+	bool found = false;
+
+
+
+	for (int i = 0; i < len; i++)
+	{
+		cout << "i:" << i << endl;
+		for (int j = i + 1; j < len; j++)
+		{
+			for (int k = j + 1; k < len; k++)
+			{
+				cout << " strings[i]" << strings[i] << " strings[j]" << strings[j] << " strings[k]" << strings[k] << endl;
+
+
+
+
+
+				abc_length = strings[i].size() + strings[j].size() + strings[k].size();
+				if (((is_substring(strings[i], strings[j]) && is_substring(strings[j], strings[k])) ||
+					(is_substring(strings[j], strings[i]) && is_substring(strings[i], strings[k])) &&
+					best_length < abc_length))
+				{
+					subStringTrio[0] = strings[i];
+					subStringTrio[1] = strings[j];
+					subStringTrio[2] = strings[k];
+					best_length = abc_length;
+				}
+			}
+		}
+	}
+	return subStringTrio;
 }
